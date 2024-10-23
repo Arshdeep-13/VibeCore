@@ -1,8 +1,8 @@
 <div align="center">
-  <img src=https://github.com/Arshdeep-13/SpotifyClone/assets/108752646/e3894377-113e-4d53-91a3-02f7c75e1112" alt="SpotifyClone Logo" width="200"/>
+  <img src="https://cdn.pixabay.com/photo/2023/10/30/14/23/ai-generated-8352992_640.jpg" alt="VibeCore Logo" width="200"/>
 </div>
 
-<h1 align="center">SpotifyClone</h1>
+<h1 align="center">VibeCore</h1>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
