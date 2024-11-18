@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   currentSongs: [],
@@ -6,15 +6,19 @@ const initialState = {
   isActive: false,
   isPlaying: false,
   activeSong: {},
-  genreListId: '',
+  genreListId: "",
+  showPlayer: false,
+  access_token: "",
+  refresh_token: "",
 };
 
 const playerSlice = createSlice({
-  name: 'player',
+  name: "player",
   initialState,
   reducers: {
     setActiveSong: (state, action) => {
-      state.activeSong = action.payload.song;
+      state.activeSong = action.payload?.SongDetails;
+      state.showPlayer = true;
 
       if (action.payload?.data?.tracks?.hits) {
         state.currentSongs = action.payload.data.tracks.hits;
@@ -24,7 +28,7 @@ const playerSlice = createSlice({
         state.currentSongs = action.payload.data;
       }
 
-      state.currentIndex = action.payload.i;
+      state.currentIndex = action.payload.SongDetails.id;
       state.isActive = true;
     },
 
@@ -57,9 +61,30 @@ const playerSlice = createSlice({
     selectGenreListId: (state, action) => {
       state.genreListId = action.payload;
     },
+
+    showPlayerFunc: (state, action) => {
+      state.showPlayer = action.payload;
+    },
+
+    setAccessToken: (state, action) => {
+      state.access_token = action.payload;
+    },
+
+    setRefreshToken: (state, action) => {
+      state.refresh_token = action.payload;
+    },
   },
 });
 
-export const { setActiveSong, nextSong, prevSong, playPause, selectGenreListId } = playerSlice.actions;
+export const {
+  setActiveSong,
+  nextSong,
+  prevSong,
+  playPause,
+  selectGenreListId,
+  showPlayerFunc,
+  setAccessToken,
+  setRefreshToken,
+} = playerSlice.actions;
 
 export default playerSlice.reducer;

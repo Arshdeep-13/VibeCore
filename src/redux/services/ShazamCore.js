@@ -1,39 +1,74 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const shazamCoreApi = createApi({
-    reducerPath: 'shazamCoreApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'https://shazam.p.rapidapi.com',
-        prepareHeaders: (headers) => {
-            headers.set('X-RapidAPI-Key', '9993d39359mshd7a76d2922c9d84p103e41jsn9564da2a3dcd');
-            headers.set('X-RapidAPI-Host', 'shazam.p.rapidapi.com');
+  reducerPath: "shazamCoreApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://api.spotify.com",
+    prepareHeaders: (headers, { getState }) => {
+      const { access_token } = getState().player;
+      headers.set("Authorization", `Bearer ${access_token}`);
 
-            return headers;
-        },
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    getRandomSongs: builder.query({
+      query: () => {
+        // console.log("first");
+        return "/v1/browse/new-releases";
+      },
     }),
-    endpoints: (builder) => ({
-        getTopCharts: builder.query({ query: () => {
-            // console.log("first")
-            return '/charts/track'
-        } }),
-        getSongDetails: builder.query({ 
-            query: ({ songid }) => {
-                // console.log("core id = ", songid);
-                return `/songs/get-details?key=${songid}&locale=en-US`;
-            }
-        }),
-        getArtistDetails: builder.query({ query: (artistId) => {
-            // console.log("artist id = ", artistId);
-            return `/artists/get-top-songs?id=${artistId.id}&l=en-US`
-        } }),
-        getSongsByCountry: builder.query({ query: () => {
-            return `/charts/list`
-        } }),
-        getSongsBySearch: builder.query({ query: (searchTerm) => {
-            console.log(searchTerm)
-            return `/search?term=${searchTerm}`
-        } }),
-    })
+    getTopCharts: builder.query({
+      query: () => {
+        // console.log("first");
+        return `/v1/search?q=top+charts&type=album`;
+      },
+    }),
+    getSongTracks: builder.query({
+      query: (albumId) => {
+        // console.log("first");
+        return `/v1/albums/${albumId}`;
+      },
+    }),
+    getTopArtistsCharts: builder.query({
+      query: (artistId) => {
+        return `/v1/artists/${artistId}/related-artists`;
+      },
+    }),
+    getSongsBySearch: builder.query({
+      query: (searchTerm) => {
+        // console.log(searchTerm);
+        return `/v1/search?q=${searchTerm}&type=album`;
+      },
+    }),
+    getArtistDetails: builder.query({
+      query: (artistId) => {
+        // console.log("artist id = ", artistId);
+        return `/v1/artists/${artistId}`;
+      },
+    }),
+    getArtistAlbums: builder.query({
+      query: (artistId) => {
+        // console.log("artist id = ", artistId);
+        return `/v1/artists/${artistId}/albums`;
+      },
+    }),
+    getSongsByCountry: builder.query({
+      query: (countryCode) => {
+        // console.log(countryCode);
+        return `/v1/search?q=top+songs&type=album&market=${countryCode}`;
+      },
+    }),
+  }),
 });
 
-export const { useGetTopChartsQuery, useGetSongDetailsQuery, useGetArtistDetailsQuery, useGetSongsByCountryQuery, useGetSongsBySearchQuery } = shazamCoreApi;
+export const {
+  useGetTopChartsQuery,
+  useGetArtistDetailsQuery,
+  useGetSongsByCountryQuery,
+  useGetSongsBySearchQuery,
+  useGetTopArtistsChartsQuery,
+  useGetRandomSongsQuery,
+  useGetSongTracksQuery,
+  useGetArtistAlbumsQuery,
+} = shazamCoreApi;

@@ -1,58 +1,84 @@
-import { useDispatch, useSelector } from "react-redux";
-
-import { Error, Loader, SongCard } from "../components";
-import { genres } from "../assets/constants"
-import {useGetTopChartsQuery } from "../redux/services/ShazamCore";
-
-import { v4 as uuidv4 } from 'uuid';
+import { useSelector } from "react-redux";
+import { Error, Loader, SongCard, TopPlay } from "../components";
+import { genres } from "../assets/constants";
+import { useGetRandomSongsQuery } from "../redux/services/ShazamCore";
+import { useEffect, useState } from "react";
 
 const Discover = () => {
-    const dispatch = useDispatch();
-    const { activeSong, isPlaying } = useSelector( (state) => state.player);
-    const { data, isFetching, error } = useGetTopChartsQuery();
+  const { activeSong, isPlaying, access_token } = useSelector(
+    (state) => state.player
+  );
+  const { data, isFetching, error } = useGetRandomSongsQuery();
+  const [songGenre, setSongGenre] = useState("Pop");
+  const [genreSongData, setGenreSongData] = useState(null);
 
-    const genreTitle = "Pop";
+  // Fetch songs based on the selected genre
+  const getGenreRelatedSongs = async (genre) => {
+    try {
+      const res = await fetch(
+        `https://api.spotify.com/v1/search?q=${genre}+songs&type=album&include_external=audio`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      const json = await res.json();
+      setGenreSongData(json);
+    } catch (err) {
+      console.error("Error fetching genre-related songs:", err);
+    }
+  };
 
-    if(isFetching) return <Loader title="Loading songs..."/>
-    if(error) return <Error />
+  useEffect(() => {
+    getGenreRelatedSongs(songGenre);
+  }, [songGenre]);
 
-    // console.log(data)
+  useEffect(() => {
+    if (data) setGenreSongData(data);
+  }, [data]);
 
-    return (
-        <div className="flex flex-col">
-            <div className="w-full flex justify-between items-center sm:flex-row flex-col mt-4 mb-10">
-                <h2 className="font-bold text-3xl text-white text-left">Discover {genreTitle}</h2>
-                <select
-                    onChange={ () => {}}
-                    value=""
-                    className="bg-black text-gray-300 p-3 text-sm rounded-lg outline-none sm:mt-0 mt-5"
-                >
-                    {
-                        genres.map( (genre) => (
-                            <option value={genre.value} key={genre.value}>
-                                {genre.title}
-                            </option>
-                        ))
-                    }
-                </select>
-            </div>
+  if (isFetching) return <Loader title="Loading songs..." />;
+  if (error) return <Error />;
 
-            <div className="flex flex-wrap sm:justify-start justify-center gap-8">
-                {
-                    data.tracks?.map( (song, i) => (
-                        <SongCard 
-                            key={song.key} 
-                            song={song}
-                            i = {i}
-                            activeSong={activeSong}
-                            isPlaying={isPlaying}
-                            data={data}
-                        />
-                    ))
-                }
-            </div>
+  return (
+    <div className="flex justify-center items-start">
+      <div className="flex flex-col w-2/3">
+        <div className="w-full flex justify-between items-center sm:flex-row flex-col mt-4 mb-10">
+          <h2 className="font-bold text-3xl text-white text-left">
+            Discover {songGenre}
+          </h2>
+          <select
+            onChange={(e) => setSongGenre(e.target.value)}
+            value={songGenre}
+            className="bg-black text-gray-300 p-3 text-sm rounded-lg outline-none sm:mt-0 mt-5"
+          >
+            {genres.map((genre) => (
+              <option value={genre.value} key={genre.value}>
+                {genre.title}
+              </option>
+            ))}
+          </select>
         </div>
-    )
-}
+
+        <div className="flex flex-wrap sm:justify-start justify-center gap-8">
+          {genreSongData?.albums?.items?.map((song, i) => (
+            <SongCard
+              key={i}
+              song={song}
+              i={i}
+              activeSong={activeSong}
+              isPlaying={isPlaying}
+              data={data}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="xl:sticky top-0 w-1/3">
+        <TopPlay />
+      </div>
+    </div>
+  );
+};
 
 export default Discover;
