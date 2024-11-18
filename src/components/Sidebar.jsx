@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   HiOutlineHashtag,
   HiOutlineHome,
@@ -39,7 +39,10 @@ const Sidebar = () => {
   return (
     <>
       <div className="md:flex hidden flex-col w-[240px] py-10 px-4 bg-[#191624]">
-        <img src={logo} alt="logo" className="w-full h-14 object-contain" />
+        <div className="flex flex-col justify-center items-center">
+          <img src={logo} alt="logo" className="w-full h-14 object-contain" />
+          <span className="text-white text-xl md:text-3xl">Pleasure</span>
+        </div>
         <NavLinks />
       </div>
 

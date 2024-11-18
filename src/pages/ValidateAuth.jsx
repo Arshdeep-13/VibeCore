@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import queryString from "query-string";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setAccessToken, setRefreshToken } from "../redux/features/playerSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ValidateAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [logedIn, setLogedIn] = useState(false);
 
   useEffect(() => {
     const validateAuth = async () => {
@@ -49,6 +50,7 @@ const ValidateAuth = () => {
         const { access_token, refresh_token } = response.data;
         dispatch(setAccessToken(access_token));
         dispatch(setRefreshToken(refresh_token));
+        setLogedIn(true);
 
         navigate("/");
       } catch (error) {
@@ -62,7 +64,19 @@ const ValidateAuth = () => {
     validateAuth(); // Call the async function inside useEffect
   }, []);
 
-  return <></>;
+  return (
+    <>
+      <div className="text-white flex flex-col justify-center items-center h-screen gap-10">
+        <h1 className="text-5xl">Redirecting...</h1>
+        <Link
+          className="rounded-md bg-blue-600 py-2 px-4 border border-transparent text-center text-xl text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none active:bg-blue-700 hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+          to="/login"
+        >
+          Retry
+        </Link>
+      </div>
+    </>
+  );
 };
 
 export default ValidateAuth;

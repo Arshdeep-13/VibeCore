@@ -36,9 +36,14 @@ const Auth = () => {
 
   return (
     <>
-      <div className="text-white">
-        <h1>Authenticate yourself</h1>
-        <button onClick={handleAuth}>Authenticate</button>
+      <div className="text-white flex flex-col justify-center items-center h-screen gap-10">
+        <h1 className="text-5xl">Authenticate yourself</h1>
+        <button
+          className="rounded-md bg-blue-600 py-2 px-4 border border-transparent text-center text-xl text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none active:bg-blue-700 hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+          onClick={handleAuth}
+        >
+          Authenticate
+        </button>
       </div>
     </>
   );
