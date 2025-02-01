@@ -9,7 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const ioredis = require("ioredis");
-const redis = new ioredis();
+const redis = new ioredis({
+    host: process.env.REDIS_HOST || "localhost", // Use 'redis' from the Docker Compose file
+    port: process.env.REDIS_PORT || 6379,
+});
 const aroundYouController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { countryCode } = req.params;
     const access_token = req.headers.authorization.split(" ")[1];
