@@ -5,7 +5,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const cookies = new Cookies();
 
 export const shazamCoreApi = createApi({
-  reducerPath: "shazamCoreApi",
+  reducerPath: "SpotifyApis",
   baseQuery: fetchBaseQuery({
     baseUrl: BACKEND_URL,
     prepareHeaders: (headers) => {

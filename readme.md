@@ -11,9 +11,10 @@
   <a href="https://github.com/Arshdeep-13/SpotifyClone/issues"><img src="https://img.shields.io/github/issues/Arshdeep-13/SpotifyClone" alt="GitHub issues"></a>
 </p>
 
-<p align="center">A simple Spotify clone to showcase your music library.</p>
+<p align="center">VibeCore is a full-stack music application that allows users to discover, stream, and manage music seamlessly. It has a React-based frontend, a Node.js backend with Express, and Redis for caching. The system is containerized using Docker, ensuring scalability and smooth deployment</p>
 
 ## Table of Contents
+
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -30,29 +31,29 @@
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/Arshdeep-13/SpotifyClone.git
-    ```
+   ```bash
+   git clone https://github.com/Arshdeep-13/SpotifyClone.git
+   ```
 
 2. Navigate to the project directory:
 
-    ```bash
-    cd SpotifyClone
-    ```
+   ```bash
+   cd SpotifyClone
+   ```
 
 3. Install dependencies:
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 ## Usage
 
 1. Start the development server:
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
 2. Open your browser and navigate to [http://localhost:3000](http://localhost:3000).
 
