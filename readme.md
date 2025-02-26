@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://cdn.pixabay.com/photo/2023/10/30/14/23/ai-generated-8352992_640.jpg" alt="VibeCore Logo" width="200"/>
+  <img src="https://www.shutterstock.com/shutterstock/photos/137565944/display_1500/stock-vector-listening-to-music-a-boy-listening-to-music-with-headphones-on-his-head-vector-eps-file-137565944.jpg" alt="VibeCore Logo" width="200"/>
 </div>
 
 <h1 align="center">VibeCore</h1>
