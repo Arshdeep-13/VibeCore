@@ -8,6 +8,9 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.get("/", (req, res) => {
+    res.send("Server is up and running");
+});
 app.get("/around-you/:countryCode", routeController.aroundYouController);
 app.get("/new-releases", routeController.newReleaseSongController);
 app.get("/top-charts", routeController.topChartsController);

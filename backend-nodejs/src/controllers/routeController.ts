@@ -1,8 +1,11 @@
 const ioredis = require("ioredis");
-const redis = new ioredis({
-  host: process.env.REDIS_HOST || "localhost", // Use 'redis' from the Docker Compose file
-  port: process.env.REDIS_PORT || 6379,
-});
+// const redis = new ioredis({
+//   host: process.env.REDIS_HOST || "localhost", // Use 'redis' from the Docker Compose file
+//   port: process.env.REDIS_PORT || 6379,
+// });
+const redis = new ioredis(
+  "redis://default:8ohlGoz30Tf46t7aM676flbZ4Or9OdFV@redis-14897.c301.ap-south-1-1.ec2.redns.redis-cloud.com:14897"
+);
 
 const aroundYouController = async (req: any, res: any) => {
   const { countryCode } = req.params;
