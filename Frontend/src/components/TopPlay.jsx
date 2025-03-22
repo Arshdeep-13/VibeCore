@@ -81,7 +81,7 @@ const TopPlay = () => {
     dispatch(playPause(false));
   };
 
-  const getSongDetails = async (song) => {
+  const getSongDetails = async (song, i) => {
     const albumId = song.uri.split(":")[2];
     let res = await fetch(`${BACKEND_URL}/albums/songs/${albumId}`, {
       headers: {
@@ -89,14 +89,18 @@ const TopPlay = () => {
       },
     });
     res = await res.json();
-    const songData = res?.tracks?.items[0];
+    const songData = res;
     songData.metadata = song;
-    setSongDetails(songData);
+    setSongDetails(res);
+
+    // console.log(songData);
+
+    // console.log(songData.preview_url);
+    dispatch(setActiveSong({ SongDetails: songData, data, i }));
+    dispatch(playPause(true));
   };
   const handlePlayClick = async (song, i) => {
-    await getSongDetails(song);
-    dispatch(setActiveSong({ SongDetails, data, i }));
-    dispatch(playPause(true));
+    await getSongDetails(song, i);
   };
 
   return (
@@ -112,7 +116,7 @@ const TopPlay = () => {
           </Link>
         </div>
         <div className="mt-4 flex flex-col gap-1">
-          {data?.slice(0, 5).map((song, i) => (
+          {data?.slice(0, 10).map((song, i) => (
             <TopChartCard
               key={song.id}
               song={song}
@@ -125,7 +129,7 @@ const TopPlay = () => {
           ))}
         </div>
       </div>
-      <div className="w-full flex flex-col mt-8">
+      {/* <div className="w-full flex flex-col mt-8">
         <div className="flex flex-row justify-between items-center">
           <h2 className="text-white font-bold text-2xl">Top Artists</h2>
           <Link to="/top-artists">
@@ -159,7 +163,7 @@ const TopPlay = () => {
             );
           })}
         </Swiper>
-      </div>
+      </div> */}
     </div>
   );
 };

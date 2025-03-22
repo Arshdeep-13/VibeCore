@@ -29,6 +29,8 @@ const Player = ({
     ref.current.currentTime = seekTime;
   }, [seekTime]);
 
+  // console.log(activeSong);
+
   return (
     <audio
       src={activeSong?.preview_url}

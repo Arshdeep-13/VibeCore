@@ -14,6 +14,12 @@ const ioredis = require("ioredis");
 //   port: process.env.REDIS_PORT || 6379,
 // });
 const redis = new ioredis("redis://default:8ohlGoz30Tf46t7aM676flbZ4Or9OdFV@redis-14897.c301.ap-south-1-1.ec2.redns.redis-cloud.com:14897");
+const spotifyPreviewFinder = require("spotify-preview-finder");
+const getPreviewUrl = (songName) => __awaiter(void 0, void 0, void 0, function* () {
+    const previewUrl = yield spotifyPreviewFinder(songName);
+    // console.log(previewUrl.results[0].previewUrls[0]);
+    return (previewUrl === null || previewUrl === void 0 ? void 0 : previewUrl.results[0]) ? previewUrl.results[0].previewUrls[0] : null;
+});
 const aroundYouController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { countryCode } = req.params;
     const access_token = req.headers.authorization.split(" ")[1];
@@ -38,6 +44,9 @@ const aroundYouController = (req, res) => __awaiter(void 0, void 0, void 0, func
                 .send({ error: "Failed to fetch data from Spotify" });
         }
         const data = yield fetchResponse.json();
+        if (data.preview_url == null) {
+            data.preview_url = yield getPreviewUrl(data.name);
+        }
         yield redis.set(`songs/${countryCode}`, JSON.stringify(data), "EX", 3600); // Cache for 1 hour
         return res.json(data);
     }
@@ -66,6 +75,9 @@ const newReleaseSongController = (req, res) => __awaiter(void 0, void 0, void 0,
                 .send({ error: "Failed to fetch data from Spotify" });
         }
         const data = yield fetchResponse.json();
+        if (data.preview_url == null) {
+            data.preview_url = yield getPreviewUrl(data.name);
+        }
         yield redis.set("newReleaseSongs", JSON.stringify(data), "EX", 3600); // Cache for 1 hour
         return res.json(data);
     }
@@ -94,6 +106,9 @@ const topChartsController = (req, res) => __awaiter(void 0, void 0, void 0, func
                 .send({ error: "Failed to fetch data from Spotify" });
         }
         const data = yield fetchResponse.json();
+        if (data.preview_url == null) {
+            data.preview_url = yield getPreviewUrl(data.name);
+        }
         yield redis.set("topCharts", JSON.stringify(data), "EX", 3600); // Cache for 1 hour
         return res.json(data);
     }
@@ -123,6 +138,9 @@ const searchTermController = (req, res) => __awaiter(void 0, void 0, void 0, fun
                 .send({ error: "Failed to fetch data from Spotify" });
         }
         const data = yield fetchResponse.json();
+        if (data.preview_url == null) {
+            data.preview_url = yield getPreviewUrl(data.name);
+        }
         yield redis.set(`searchTerm/${searchTerm}`, JSON.stringify(data), "EX", 1800); // Cache for 1 hour
         return res.json(data);
     }
@@ -152,6 +170,10 @@ const topArtistsChartsController = (req, res) => __awaiter(void 0, void 0, void 
                 .send({ error: "Failed to fetch data from Spotify" });
         }
         const data = yield fetchResponse.json();
+        console.log(data);
+        if (data.preview_url == null) {
+            data.preview_url = yield getPreviewUrl(data.name);
+        }
         yield redis.set(`topArtistsCharts/${artistId}`, JSON.stringify(data), "EX", 1800); // Cache for 1 hour
         return res.json(data);
     }
@@ -181,6 +203,9 @@ const artistsDetailsController = (req, res) => __awaiter(void 0, void 0, void 0,
                 .send({ error: "Failed to fetch data from Spotify" });
         }
         const data = yield fetchResponse.json();
+        if (data.preview_url == null) {
+            data.preview_url = yield getPreviewUrl(data.name);
+        }
         yield redis.set(`artistsDetails/${artistId}`, JSON.stringify(data), "EX", 1800); // Cache for 1 hour
         return res.json(data);
     }
@@ -210,6 +235,9 @@ const artistsAlbumsController = (req, res) => __awaiter(void 0, void 0, void 0, 
                 .send({ error: "Failed to fetch data from Spotify" });
         }
         const data = yield fetchResponse.json();
+        if (data.preview_url == null) {
+            data.preview_url = yield getPreviewUrl(data.name);
+        }
         yield redis.set(`artistsAlbums/${artistId}`, JSON.stringify(data), "EX", 1800); // Cache for 1 hour
         return res.json(data);
     }
@@ -239,6 +267,10 @@ const albumSongsController = (req, res) => __awaiter(void 0, void 0, void 0, fun
                 .send({ error: "Failed to fetch data from Spotify" });
         }
         const data = yield fetchResponse.json();
+        if (data.preview_url == null) {
+            data.preview_url = yield getPreviewUrl(data.name);
+        }
+        // console.log(data);
         yield redis.set(`albumSongs/${albumId}`, JSON.stringify(data), "EX", 1800); // Cache for 1 hour
         return res.json(data);
     }
@@ -268,6 +300,9 @@ const genreSongsController = (req, res) => __awaiter(void 0, void 0, void 0, fun
                 .send({ error: "Failed to fetch data from Spotify" });
         }
         const data = yield fetchResponse.json();
+        if (data.preview_url == null) {
+            data.preview_url = yield getPreviewUrl(data.name);
+        }
         yield redis.set(`genreSongs/${genre}`, JSON.stringify(data), "EX", 1800); // Cache for 1 hour
         return res.json(data);
     }

@@ -17,25 +17,27 @@ const SongCard = ({ song, i, isPlaying, activeSong, data }) => {
     dispatch(playPause(false));
   };
   const handlePlayClick = async () => {
-    await getSongDetails(song, data);
-    dispatch(setActiveSong({ SongDetails, data, i }));
-    dispatch(playPause(true));
+    // console.log("click", song);
+    await getSongDetails();
   };
   const getSongDetails = async () => {
     const albumId = song.uri.split(":")[2];
-
-    console.log(`${BACKEND_URL}/albums/songs/${albumId}`);
 
     let res = await fetch(`${BACKEND_URL}/albums/songs/${albumId}`, {
       headers: {
         Authorization: `Bearer ${cookies.get("access_token")}`,
       },
     });
-    console.log(res);
     res = await res.json();
-    const songData = res?.tracks?.items[0];
+    const songData = res;
     songData.metadata = song;
-    setSongDetails(songData);
+    setSongDetails(res);
+
+    // console.log(songData);
+
+    // console.log(songData.preview_url);
+    dispatch(setActiveSong({ SongDetails: songData, data, i }));
+    dispatch(playPause(true));
   };
 
   const image = song?.images?.[0].url
@@ -65,10 +67,10 @@ const SongCard = ({ song, i, isPlaying, activeSong, data }) => {
       <div className="mt-4 flex flex-col">
         <p className="font-semibold text-lg text-white truncate">
           {/* <Link to={`/songs/${song.key}`}>{song.title}</Link> */}
-          <p>{song.title}</p>
+          <span>{song.title}</span>
         </p>
         <p className="text-sm truncate text-gray-300 mt-1">
-          <p
+          <span
           // to={
           //   song.artists
           //     ? `artists/${song?.artists[0]?.id}`
@@ -76,7 +78,7 @@ const SongCard = ({ song, i, isPlaying, activeSong, data }) => {
           // }
           >
             {song.name}
-          </p>
+          </span>
         </p>
       </div>
     </div>

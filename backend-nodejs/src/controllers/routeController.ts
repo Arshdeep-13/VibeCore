@@ -6,6 +6,13 @@ const ioredis = require("ioredis");
 const redis = new ioredis(
   "redis://default:8ohlGoz30Tf46t7aM676flbZ4Or9OdFV@redis-14897.c301.ap-south-1-1.ec2.redns.redis-cloud.com:14897"
 );
+const spotifyPreviewFinder = require("spotify-preview-finder");
+
+const getPreviewUrl = async (songName: string) => {
+  const previewUrl = await spotifyPreviewFinder(songName);
+  // console.log(previewUrl.results[0].previewUrls[0]);
+  return previewUrl?.results[0] ? previewUrl.results[0].previewUrls[0] : null;
+};
 
 const aroundYouController = async (req: any, res: any) => {
   const { countryCode } = req.params;
@@ -39,6 +46,11 @@ const aroundYouController = async (req: any, res: any) => {
     }
 
     const data = await fetchResponse.json();
+
+    if (data.preview_url == null) {
+      data.preview_url = await getPreviewUrl(data.name);
+    }
+
     await redis.set(`songs/${countryCode}`, JSON.stringify(data), "EX", 3600); // Cache for 1 hour
     return res.json(data);
   } catch (err) {
@@ -73,6 +85,11 @@ const newReleaseSongController = async (req: any, res: any) => {
     }
 
     const data = await fetchResponse.json();
+
+    if (data.preview_url == null) {
+      data.preview_url = await getPreviewUrl(data.name);
+    }
+
     await redis.set("newReleaseSongs", JSON.stringify(data), "EX", 3600); // Cache for 1 hour
     return res.json(data);
   } catch (err) {
@@ -107,6 +124,9 @@ const topChartsController = async (req: any, res: any) => {
     }
 
     const data = await fetchResponse.json();
+    if (data.preview_url == null) {
+      data.preview_url = await getPreviewUrl(data.name);
+    }
     await redis.set("topCharts", JSON.stringify(data), "EX", 3600); // Cache for 1 hour
     return res.json(data);
   } catch (err) {
@@ -142,6 +162,9 @@ const searchTermController = async (req: any, res: any) => {
     }
 
     const data = await fetchResponse.json();
+    if (data.preview_url == null) {
+      data.preview_url = await getPreviewUrl(data.name);
+    }
     await redis.set(
       `searchTerm/${searchTerm}`,
       JSON.stringify(data),
@@ -182,6 +205,10 @@ const topArtistsChartsController = async (req: any, res: any) => {
     }
 
     const data = await fetchResponse.json();
+    console.log(data);
+    if (data.preview_url == null) {
+      data.preview_url = await getPreviewUrl(data.name);
+    }
     await redis.set(
       `topArtistsCharts/${artistId}`,
       JSON.stringify(data),
@@ -222,6 +249,9 @@ const artistsDetailsController = async (req: any, res: any) => {
     }
 
     const data = await fetchResponse.json();
+    if (data.preview_url == null) {
+      data.preview_url = await getPreviewUrl(data.name);
+    }
     await redis.set(
       `artistsDetails/${artistId}`,
       JSON.stringify(data),
@@ -262,6 +292,9 @@ const artistsAlbumsController = async (req: any, res: any) => {
     }
 
     const data = await fetchResponse.json();
+    if (data.preview_url == null) {
+      data.preview_url = await getPreviewUrl(data.name);
+    }
     await redis.set(
       `artistsAlbums/${artistId}`,
       JSON.stringify(data),
@@ -302,6 +335,13 @@ const albumSongsController = async (req: any, res: any) => {
     }
 
     const data = await fetchResponse.json();
+
+    if (data.preview_url == null) {
+      data.preview_url = await getPreviewUrl(data.name);
+    }
+
+    // console.log(data);
+
     await redis.set(`albumSongs/${albumId}`, JSON.stringify(data), "EX", 1800); // Cache for 1 hour
     return res.json(data);
   } catch (err) {
@@ -337,6 +377,9 @@ const genreSongsController = async (req: any, res: any) => {
     }
 
     const data = await fetchResponse.json();
+    if (data.preview_url == null) {
+      data.preview_url = await getPreviewUrl(data.name);
+    }
     await redis.set(`genreSongs/${genre}`, JSON.stringify(data), "EX", 1800); // Cache for 1 hour
     return res.json(data);
   } catch (err) {

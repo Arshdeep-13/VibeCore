@@ -21,7 +21,7 @@ const TopCharts = () => {
       <div className="flex flex-wrap sm:justify-start justify-center gap-8">
         {data?.albums?.items?.map((song, i) => (
           <SongCard
-            key={song.key}
+            key={song.key + Math.random().toString()}
             song={song}
             isPlaying={isPlaying}
             activeSong={activeSong}
