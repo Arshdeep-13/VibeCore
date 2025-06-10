@@ -4,7 +4,7 @@ const ioredis = require("ioredis");
 //   port: process.env.REDIS_PORT || 6379,
 // });
 const redis = new ioredis(
-  "redis://default:8ohlGoz30Tf46t7aM676flbZ4Or9OdFV@redis-14897.c301.ap-south-1-1.ec2.redns.redis-cloud.com:14897"
+  "redis://default:fZXozk4GcL4q8HGQ0tnSHLG68REEsy2M@redis-16708.c301.ap-south-1-1.ec2.redns.redis-cloud.com:16708"
 );
 const spotifyPreviewFinder = require("spotify-preview-finder");
 

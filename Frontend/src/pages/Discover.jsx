@@ -15,11 +15,14 @@ const Discover = () => {
   // Fetch songs based on the selected genre
   const getGenreRelatedSongs = async (genre) => {
     try {
-      const res = await fetch(`http://localhost:8000/songs/${genre}`, {
-        headers: {
-          Authorization: `Bearer ${cookies.get("access_token")}`,
-        },
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/songs/${genre}`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("access_token")}`,
+          },
+        }
+      );
       const json = await res.json();
       setGenreSongData(json);
     } catch (err) {
